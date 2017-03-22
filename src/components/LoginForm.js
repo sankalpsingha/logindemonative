@@ -2,16 +2,23 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Hoshi } from 'react-native-textinput-effects';
 import Button from 'react-native-button';
+import _ from 'lodash';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged } from '../actions/';
+import { emailChanged, passwordChanged, loginUser } from '../actions/';
 
 class LoginForm extends Component {
+  onButtonSubmit() {
+    console.log('Submitted: ', `${this.props.email} ${this.props.password}`);
+    const { email, password } = this.props; 
+    this.props.loginUser({ email, password });
+  }
   emailChanged(value) {
-    this.props.emailChanged(value);
+    const email = _.lowerCase(value.trim());
+    this.props.emailChanged(email);
   }
   passwordChanged(value) {
     // console.log('Value:', value);
-    this.props.passwordChanged(value);
+    this.props.passwordChanged(value.trim());
   }
   render() {
     return (
@@ -35,6 +42,7 @@ class LoginForm extends Component {
           // please pass the backgroundColor of your TextInput container.
           backgroundColor={'#FFF'}
           onChangeText={this.passwordChanged.bind(this)}
+          value={this.props.password}
           secureTextEntry
         />
         <Button
@@ -46,7 +54,7 @@ class LoginForm extends Component {
             marginTop: 10
           }}
           styleDisabled={{ color: 'red' }}
-          onPress={() => console.log('Pressed!!')}
+          onPress={this.onButtonSubmit.bind(this)}
         >
         Login
       </Button>
@@ -64,8 +72,9 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    email: state.auth.email
+    email: state.auth.email,
+    password: state.auth.password
   };
 };
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged })(LoginForm);
+export default connect(mapStateToProps, { emailChanged, passwordChanged, loginUser })(LoginForm);

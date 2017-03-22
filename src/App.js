@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import { logger } from 'redux-logger';
+import { Provider } from 'react-redux';
+import Reducers from './reducers/';
+import LoginForm from './components/LoginForm';
 
 class App extends Component {
   render() {
     return (
-      <View>
-        <Text>
-          Hello...
-        </Text>
-      </View>
+      <Provider store={createStore(Reducers, applyMiddleware(logger))}>
+        <View>
+          <LoginForm />
+        </View>
+      </Provider>
     );
   }
 }

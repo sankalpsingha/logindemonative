@@ -6,7 +6,6 @@ export const emailChanged = (email) => {
   };
 };
 
-
 export const passwordChanged = (password) => {
   return {
     type: 'PASSWORD_CHANGED',
@@ -16,6 +15,9 @@ export const passwordChanged = (password) => {
 
 export const loginUser = ({ email, password }) => {
   return (dispatch) => {
+    dispatch({
+      type: 'LOAD_SPINNER'
+    });
     fetch('https://trafixsoft.com/token', {
         method: 'POST',
         headers: {
@@ -41,6 +43,10 @@ export const loginUser = ({ email, password }) => {
           console.log('SUCCESS!!');
           response.json().then(data => {
             console.log(data);
+            dispatch({
+              type: 'LOGIN_USER_SUCCESS',
+              payload: data
+            });
           });
         }
       });
